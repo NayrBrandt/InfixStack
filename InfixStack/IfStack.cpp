@@ -29,17 +29,39 @@ Need to handle negative numbers. Can I just * -1 to get to where I want?
 Can have -(x+y) and should negate the whole paren expression
 Can have x - -y and should add. Should work natively if I negate y?
 Check my operators stack and see if the - is coming after a non ) or number, if so then negate next num?
+The - op is unary if after NULL (at beginning of expression) or after a +, -, /, *, or (
 */
 double IfStack::solve_exp()
 {
     string user_exp = getMsg();
+    bool neg = false;
 
-    for (int i = 0; i < user_exp.length(); i++) 
+    for (int i = 0; i < user_exp.length(); i++)
     {
-        
         // want to ignore spaces in the formation of the expression
         if (user_exp[i] == ' ')
             continue;
+
+        
+
+        // SHOULD BE ABLE TO PUSH THIS IN THE HANDLE_NEGATION FUNCTION TO WORK BETTER
+        if (user_exp[i] == '-')
+        {
+            if (i > 0 && user_exp[i - 1] == '+' ||
+                user_exp[i - 1] == '*' ||
+                user_exp[i - 1] == '-' ||
+                user_exp[i - 1] == '/' ||
+                user_exp[i - 1] == '(' )
+            {
+                neg = true;                
+            }
+        }
+      
+        
+        ///////////////////////////////////
+        // Maybe handle negatives up here
+
+
 
         // push any open parenthesis on the operators stack
         else if (user_exp[i] == '(')
@@ -58,7 +80,8 @@ double IfStack::solve_exp()
             while (!operators.empty() && operators.top() != '(')
             {
                 if (!working_exp.empty() && !operators.empty()) { //does this need to be size >= 2?
-                    perform_operation();
+                    (neg ? handle_negation() : perform_operation());
+                    neg = false;
                 }
             }
             // pop...
@@ -74,7 +97,8 @@ double IfStack::solve_exp()
             {
                 if (!working_exp.empty() && !operators.empty())
                 {
-                    perform_operation();
+                    (neg ? handle_negation() : perform_operation());
+                    neg = false;
                 }
             }
             /// <summary>
@@ -86,7 +110,8 @@ double IfStack::solve_exp()
     }  // Done handling the parenthesis and adding the user string? 
 
     while (!operators.empty()) {
-        perform_operation();
+        (neg ? handle_negation() : perform_operation());
+        neg = false;
     }
 
     return working_exp.top();
@@ -138,6 +163,21 @@ void IfStack::perform_operation()
 
 void IfStack::handle_negation()
 {
+    //if (working_exp[i] == '-')
+
+
+    operand2 = working_exp.top(); //take the first number WHICH IS OUR SECOND OPERAND
+    working_exp.pop(); // discard that number to access next
+
+    operand1 = working_exp.top(); // take the second number WHICH IS THE FIRST OPERAND
+    working_exp.pop(); // discard that number to access next 
+
+    working_operator = operators.top(); // assumes we've got another operator besides the () in?
+    operators.pop();
+
+    working_exp.push(eval(operand1, (operand2 * -1), working_operator)); //pushing the result of the calc of the above numbers
+
+
 }
 
 

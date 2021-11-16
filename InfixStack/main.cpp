@@ -13,10 +13,15 @@ int main()
 {
 	IfStack infix;
 
-	double answer;
-	answer = infix.solve_exp();
+	double answer = 0;
 
-	cout << answer << endl;
+	while (answer != 1) 
+	{
+
+		answer = infix.solve_exp();
+
+		cout << answer << endl;
+	}
 
 	return 0;
 }
