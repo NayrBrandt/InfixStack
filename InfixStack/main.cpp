@@ -13,7 +13,10 @@ int main()
 {
 	IfStack infix;
 
-	cout << infix.solve_exp();
+	double answer;
+	answer = infix.solve_exp();
+
+	cout << answer << endl;
 
 	return 0;
 }

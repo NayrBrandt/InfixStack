@@ -18,10 +18,9 @@ class IfStack
 private:
 	stack<char> operators;
 	stack<double> working_exp;
+	double operand2, operand1;
+	char working_operator;
 	double result;
-	
-
-
 
 
 public:
@@ -30,6 +29,7 @@ public:
 	double solve_exp();
 	int precedence(char);
 	double eval(double, double, char);
+	void perform_operation();
 
 
 };

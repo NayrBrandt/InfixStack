@@ -16,7 +16,6 @@ string IfStack::getMsg()
 	string express;
 	cout << "Type your infix operators: \n";
 
-	cin.ignore();
 	getline(cin, express);
 
 	return express;	
@@ -26,84 +25,63 @@ double IfStack::solve_exp()
 {
     string user_exp = getMsg();
 
-    double val1, val2;
-    char op;
-
     for (int i = 0; i < user_exp.length(); i++) 
     {
-
+        
+        // want to ignore spaces in the formation of the expression
         if (user_exp[i] == ' ')
             continue;
 
+        // push any open parenthesis on the operators stack
         else if (user_exp[i] == '(')
             operators.push(user_exp[i]);
 
+        // push any numbers on the working expression stack
+        // should read in ints and convert them to doubles? 
         else if (isdigit(user_exp[i]))
-            working_exp.push(user_exp[i]);
+            working_exp.push(stod(string(1, user_exp[i])));
 
-        
-
-
-
-
-
-             
+        // if we find a close parenthesis, want to stop and eval it right away
         else if (user_exp[i] == ')')
         {
+            // as long as there are still operators we want to be in this loop
+            // unless we hit another open parenthesis
             while (!operators.empty() && operators.top() != '(')
             {
-                val2 = working_exp.top();
-                working_exp.pop();
-
-                val1 = working_exp.top();
-                working_exp.pop();
-
-                op = operators.top();
-                operators.pop();
-
-                working_exp.push(eval(val1, val2, op));
+                if (!working_exp.empty() && !operators.empty()) { //does this need to be size >= 2?
+                    perform_operation();
+                }
             }
-
-            if (!operators.empty())
-                operators.pop();
+            // pop...
+            if (!operators.empty()) // I only want to pop here to get rid of my '(' in my stack
+                operators.pop(); 
         }
-            
-        else
+                
+        else //still working through the user expression
         {
-            while ((!operators.empty()) && precedence(operators.top())
-                >= precedence(user_exp[i])) {
-                val2 = working_exp.top();
-                working_exp.pop();
-
-                val1 = working_exp.top();
-                working_exp.pop();
-
-                op = operators.top();
-                operators.pop();
-
-                working_exp.push(eval(val1, val2, op));
+            while ((!operators.empty()) && precedence(operators.top()) 
+                    >= precedence(user_exp[i])) 
+                // digits should be pushed so val at [i] should be an operator?
+            {
+                if (!working_exp.empty() && !operators.empty())
+                {
+                    perform_operation();
+                }
             }
-
             operators.push(user_exp[i]);
         }
-    }
+    }  // Done handling the parenthesis and adding the user string? 
 
     while (!operators.empty()) {
-        val2 = working_exp.top();
-        working_exp.pop();
-
-        val1 = working_exp.top();
-        working_exp.pop();
-
-        op = operators.top();
-        operators.pop();
-
-        working_exp.push(eval(val1, val2, op));
+        perform_operation();
     }
 
     return working_exp.top();
     
 }
+
+
+
 
 
 int IfStack::precedence(char n)
@@ -129,6 +107,21 @@ double IfStack::eval(double a, double b, char n)
 			case '/': 
 				return a / b;
 		}
+}
+
+void IfStack::perform_operation()
+{
+    operand2 = working_exp.top(); //take the first number WHICH IS OUR SECOND OPERAND
+    working_exp.pop(); // discard that number to access next
+
+    operand1 = working_exp.top(); // take the second number WHICH IS THE FIRST OPERAND
+    working_exp.pop(); // discard that number to access next 
+
+    working_operator = operators.top(); // assumes we've got another operator besides the () in?
+    operators.pop(); 
+
+    working_exp.push(eval(operand1, operand2, working_operator)); //pushing the result of the calc of the above numbers
+
 }
 
 
