@@ -25,6 +25,10 @@ string IfStack::getMsg()
 
 /*
 
+Need to add a .peek function to construct more than single digit operands
+
+
+
 Need to handle negative numbers. Can I just * -1 to get to where I want? 
 Can have -(x+y) and should negate the whole paren expression
 Can have x - -y and should add. Should work natively if I negate y?
@@ -48,7 +52,20 @@ double IfStack::solve_exp()
         // push any numbers on the working expression stack
         // should read in ints and convert them to doubles? 
         else if (isdigit(user_exp[i]))
-            working_exp.push(stod(string(1, user_exp[i])));
+        {
+            string temp = "";
+
+            while(isdigit(user_exp[i]))
+            {
+                temp += user_exp[i];
+                i++;
+            }           
+            i--; // back up one spot so we don't miss the operator 
+                 // after adding individual digits. SHOULD REWRITE
+            working_exp.push(stod(temp));
+
+        }
+            
 
         // if we find a close parenthesis, want to stop and eval it right away
         else if (user_exp[i] == ')')
@@ -138,6 +155,11 @@ void IfStack::perform_operation()
 
 void IfStack::handle_negation()
 {
+}
+
+void IfStack::check_digit_amt()
+{
+
 }
 
 

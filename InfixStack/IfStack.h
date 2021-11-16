@@ -31,6 +31,7 @@ public:
 	double eval(double, double, char);
 	void perform_operation();
 	void handle_negation();
+	void check_digit_amt();
 
 
 };
