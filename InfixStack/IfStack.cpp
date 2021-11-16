@@ -21,6 +21,15 @@ string IfStack::getMsg()
 	return express;	
 }	
 
+
+
+/*
+
+Need to handle negative numbers. Can I just * -1 to get to where I want? 
+Can have -(x+y) and should negate the whole paren expression
+Can have x - -y and should add. Should work natively if I negate y?
+Check my operators stack and see if the - is coming after a non ) or number, if so then negate next num?
+*/
 double IfStack::solve_exp()
 {
     string user_exp = getMsg();
@@ -68,6 +77,10 @@ double IfStack::solve_exp()
                     perform_operation();
                 }
             }
+            /// <summary>
+            /// IS THIS WHERE I HANDLE NEGATIVES?
+            /// </summary>
+            /// <returns></returns>
             operators.push(user_exp[i]);
         }
     }  // Done handling the parenthesis and adding the user string? 
@@ -79,7 +92,6 @@ double IfStack::solve_exp()
     return working_exp.top();
     
 }
-
 
 
 
@@ -122,6 +134,10 @@ void IfStack::perform_operation()
 
     working_exp.push(eval(operand1, operand2, working_operator)); //pushing the result of the calc of the above numbers
 
+}
+
+void IfStack::handle_negation()
+{
 }
 
 

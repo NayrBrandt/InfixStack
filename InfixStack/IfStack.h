@@ -30,6 +30,7 @@ public:
 	int precedence(char);
 	double eval(double, double, char);
 	void perform_operation();
+	void handle_negation();
 
 
 };
