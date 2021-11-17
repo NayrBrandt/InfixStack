@@ -21,6 +21,7 @@ private:
 	double operand2, operand1;
 	char working_operator;
 	double result;
+	bool neg = false;
 
 
 public:

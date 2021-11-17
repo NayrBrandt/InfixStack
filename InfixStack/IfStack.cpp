@@ -25,9 +25,6 @@ string IfStack::getMsg()
 
 /*
 
-Need to add a .peek function to construct more than single digit operands
-
-
 
 Need to handle negative numbers. Can I just * -1 to get to where I want? 
 Can have -(x+y) and should negate the whole paren expression
@@ -37,11 +34,23 @@ Check my operators stack and see if the - is coming after a non ) or number, if 
 double IfStack::solve_exp()
 {
     string user_exp = getMsg();
-    bool neg = false;
+    
 
     for (int i = 0; i < user_exp.length(); i++) 
     {
-        
+        if (user_exp[i] == '-')
+        {
+            if (i > 0 && user_exp[i - 1] == '+' ||
+                user_exp[i - 1] == '*' ||
+                user_exp[i - 1] == '-' ||
+                user_exp[i - 1] == '/' ||
+                user_exp[i - 1] == '(')
+            {
+                neg = true;
+                i++;
+                // SOMETHING IS WRONG HERE WHERE A LEADING UNARY OP MAKES ME LOSE A DIGIT
+            }
+        }
         // want to ignore spaces in the formation of the expression
         if (user_exp[i] == ' ')
             continue;
@@ -75,7 +84,8 @@ double IfStack::solve_exp()
             // unless we hit another open parenthesis
             while (!operators.empty() && operators.top() != '(')
             {
-                if (!working_exp.empty() && !operators.empty()) { //does this need to be size >= 2?
+                if (!working_exp.empty() && !operators.empty())
+                {                   
                     perform_operation();
                 }
             }
@@ -88,24 +98,27 @@ double IfStack::solve_exp()
         {
             
 
-            while ((!operators.empty()) && precedence(operators.top()) 
+            while ((!operators.empty()) 
+                    && precedence(operators.top()) 
                     >= precedence(user_exp[i])) 
                 // digits should be pushed so val at [i] should be an operator?
             {
                 if (!working_exp.empty() && !operators.empty())
                 {
-                    perform_operation();
+                    (neg ? handle_negation() : perform_operation());
                 }
             }
             
             operators.push(user_exp[i]);
         }
+        cout << user_exp[i] << endl;
     }  // Done handling the parenthesis and adding the user string? 
 
-    while (!operators.empty()) {
-        perform_operation();
+    while (!operators.empty()) 
+    {        
+        (neg ? handle_negation() : perform_operation());    
     }
-
+    cout << (neg ? "yes" : "no") << endl;
     return working_exp.top();
     
 }
@@ -155,11 +168,18 @@ void IfStack::perform_operation()
 
 void IfStack::handle_negation()
 {
-    operand1 = working_exp.top();
-    working_exp.pop();
-    operand1 = -operand1;
-    working_exp.push(operand1);
+    operand2 = -working_exp.top(); //take the first number WHICH IS OUR SECOND OPERAND
+    working_exp.pop(); // discard that number to access next
+
+    operand1 = working_exp.top(); // take the second number WHICH IS THE FIRST OPERAND
+    working_exp.pop(); // discard that number to access next 
+
+    working_operator = operators.top(); // assumes we've got another operator besides the () in?
     operators.pop();
+
+    working_exp.push(eval(operand1, operand2, working_operator)); //pushing the result of the calc of the above numbers
+    neg = false;
+    
 }
 
 void IfStack::check_digit_amt()
