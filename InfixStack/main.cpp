@@ -14,9 +14,12 @@ int main()
 	IfStack infix;
 
 	double answer;
-	answer = infix.solve_exp();
+	
+		answer = infix.solve_exp();
 
-	cout << answer << endl;
+		cout << answer << endl;
+	
+	
 
 	return 0;
 }

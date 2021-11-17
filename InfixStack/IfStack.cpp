@@ -37,6 +37,7 @@ Check my operators stack and see if the - is coming after a non ) or number, if 
 double IfStack::solve_exp()
 {
     string user_exp = getMsg();
+    bool neg = false;
 
     for (int i = 0; i < user_exp.length(); i++) 
     {
@@ -55,7 +56,7 @@ double IfStack::solve_exp()
         {
             string temp = "";
 
-            while(isdigit(user_exp[i]))
+            while(isdigit(user_exp[i])) //concatenates individual digits into any larger numbers
             {
                 temp += user_exp[i];
                 i++;
@@ -85,6 +86,8 @@ double IfStack::solve_exp()
                 
         else //still working through the user expression
         {
+            
+
             while ((!operators.empty()) && precedence(operators.top()) 
                     >= precedence(user_exp[i])) 
                 // digits should be pushed so val at [i] should be an operator?
@@ -94,10 +97,7 @@ double IfStack::solve_exp()
                     perform_operation();
                 }
             }
-            /// <summary>
-            /// IS THIS WHERE I HANDLE NEGATIVES?
-            /// </summary>
-            /// <returns></returns>
+            
             operators.push(user_exp[i]);
         }
     }  // Done handling the parenthesis and adding the user string? 
@@ -155,6 +155,11 @@ void IfStack::perform_operation()
 
 void IfStack::handle_negation()
 {
+    operand1 = working_exp.top();
+    working_exp.pop();
+    operand1 = -operand1;
+    working_exp.push(operand1);
+    operators.pop();
 }
 
 void IfStack::check_digit_amt()
