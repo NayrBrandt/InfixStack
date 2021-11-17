@@ -65,6 +65,9 @@ double IfStack::solve_exp()
         {
             string temp = "";
 
+
+            // TO DO MAYBE: Refactor with for loop, set i to j at the end, use substring
+
             while(isdigit(user_exp[i])) //concatenates individual digits into any larger numbers
             {
                 temp += user_exp[i];
@@ -86,7 +89,7 @@ double IfStack::solve_exp()
             {
                 if (!working_exp.empty() && !operators.empty())
                 {                   
-                    perform_operation();
+                    neg ? handle_negation() : perform_operation();
                 }
             }
             // pop...
@@ -111,14 +114,14 @@ double IfStack::solve_exp()
             
             operators.push(user_exp[i]);
         }
-        cout << user_exp[i] << endl;
+        //cout << user_exp[i] << endl;
     }  // Done handling the parenthesis and adding the user string? 
 
     while (!operators.empty()) 
     {        
         (neg ? handle_negation() : perform_operation());    
     }
-    cout << (neg ? "yes" : "no") << endl;
+    //cout << (neg ? "yes" : "no") << endl;
     return working_exp.top();
     
 }
@@ -161,7 +164,7 @@ void IfStack::perform_operation()
 
     working_operator = operators.top(); // assumes we've got another operator besides the () in?
     operators.pop(); 
-
+    cout << operand1 << working_operator << operand2 << endl;
     working_exp.push(eval(operand1, operand2, working_operator)); //pushing the result of the calc of the above numbers
 
 }
