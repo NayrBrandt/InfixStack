@@ -59,7 +59,7 @@ double IfStack::solve_exp()
                     unary = true; // sets the flag to negate an operation 
                     
                 }
-                i++; // used to skip past the - symbol that we process here and do not want on the stack                            
+                
             }
         }        
 
@@ -123,10 +123,7 @@ double IfStack::solve_exp()
                 }
             }            
             operators.push(user_exp[i]);
-        }        
-        // handles adding a subtraction - because I messed up the logic that made it work earlier? (11/17/2021)
-        if( user_exp[i] == '-')
-            operators.push(user_exp[i]);
+        } 
        
     }  // Done handling the parenthesis and adding the user string? 
 
