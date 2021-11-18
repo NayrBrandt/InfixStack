@@ -52,12 +52,12 @@ double IfStack::solve_exp()
             {
                 if (i != user_exp.length() && isdigit(user_exp[i + 1])) {
                     negnum = true; // sets the flag to negate the next number added to the stack
-                    cout << "negnum" << endl;
+                    
                 }
                 else
                 {
                     unary = true; // sets the flag to negate an operation 
-                    cout << "unary" << endl;
+                    
                 }
                 i++; // used to skip past the - symbol that we process here and do not want on the stack                            
             }
@@ -80,7 +80,7 @@ double IfStack::solve_exp()
             }
             i--; // back up one spot so we don't miss the operator 
                  // after adding individual digits. SHOULD REWRITE
-            // cout << concat_num << endl;
+            
             if (negnum) {
                 // convert the number to negative if the negnum flag is set
                 working_exp.push(stod(concat_num) * -1 );
@@ -127,7 +127,7 @@ double IfStack::solve_exp()
         // handles adding a subtraction - because I messed up the logic that made it work earlier? (11/17/2021)
         if( user_exp[i] == '-')
             operators.push(user_exp[i]);
-        cout << user_exp[i] << endl;
+       
     }  // Done handling the parenthesis and adding the user string? 
 
     while (!operators.empty()) 
@@ -175,7 +175,7 @@ void IfStack::perform_operation()
 
     working_operator = operators.top(); // assumes we've got another operator besides the () in?
     operators.pop(); 
-    cout << operand1 << working_operator << operand2 << " performOP " << endl;
+   
     working_exp.push(eval(operand1, operand2, working_operator)); //pushing the result of the calc of the above numbers
 
 }
@@ -193,7 +193,7 @@ void IfStack::handle_negation()
 
     working_operator = operators.top();
     operators.pop();
-    cout << operand1 << working_operator << operand2 << " UnaryHandle" << endl;
+   
     working_exp.push(eval(operand1, operand2, working_operator)* -1);
     unary = false;    
 }
