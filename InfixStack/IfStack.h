@@ -20,9 +20,8 @@ private:
 	stack<double> working_exp;
 	double operand2, operand1;
 	char working_operator;
-	double result;
-	bool neg = false;
-
+	bool unary = false;
+	bool negnum = false;
 
 public:
 
@@ -32,7 +31,5 @@ public:
 	double eval(double, double, char);
 	void perform_operation();
 	void handle_negation();
-	void check_digit_amt();
-
 
 };
